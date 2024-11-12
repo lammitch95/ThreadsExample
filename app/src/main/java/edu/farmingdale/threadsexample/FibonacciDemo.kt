@@ -38,6 +38,7 @@ fun FibonacciDemoNoBgThrd() {
                 val num = textInput.toLongOrNull() ?: 0
                 val fibNumber = fibonacci(num)
                 answer = NumberFormat.getNumberInstance(Locale.US).format(fibNumber)
+
             }) {
                 Text("Fibonacci")
             }
@@ -50,3 +51,40 @@ fun FibonacciDemoNoBgThrd() {
 fun fibonacci(n: Long): Long {
     return if (n <= 1) n else fibonacci(n - 1) + fibonacci(n - 2)
 }
+
+@Composable
+fun FibonacciDemoWithCoroutine() {
+    var answer by remember { mutableStateOf("") }
+    var textInput by remember { mutableStateOf("40") }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    Column {
+        Row {
+            TextField(
+                value = textInput,
+                onValueChange = { textInput = it },
+                label = { Text("Number?") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                )
+            )
+            Button(onClick = {
+                coroutineScope.launch(Dispatchers.Default){
+                    val num = textInput.toLongOrNull() ?: 0
+                    val fibNumber = fibonacci(num)
+                    answer = NumberFormat.getNumberInstance(Locale.US).format(fibNumber)
+                }
+
+            }) {
+                Text("Fibonacci")
+            }
+        }
+
+        Text("Result: $answer")
+    }
+}
+
+
+
