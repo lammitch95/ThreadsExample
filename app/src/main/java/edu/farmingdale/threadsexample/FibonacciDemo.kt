@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
+import edu.farmingdale.threadsexample.countdowntimer.CountDownActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -71,6 +72,7 @@ fun FibonacciDemoWithCoroutine() {
                 )
             )
             Button(onClick = {
+
                 coroutineScope.launch(Dispatchers.Default){
                     val num = textInput.toLongOrNull() ?: 0
                     val fibNumber = fibonacci(num)

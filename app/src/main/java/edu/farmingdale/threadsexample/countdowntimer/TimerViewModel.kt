@@ -34,6 +34,9 @@ class TimerViewModel : ViewModel() {
     var isRunning by mutableStateOf(false)
         private set
 
+    var alarmStatus by mutableStateOf(false)
+    private set
+
     fun selectTime(hour: Int, min: Int, sec: Int) {
         selectedHour = hour
         selectedMinute = min
@@ -46,14 +49,22 @@ class TimerViewModel : ViewModel() {
 
         // Start coroutine that makes the timer count down
         if (totalMillis > 0) {
+            alarmStatus = false
             isRunning = true
             remainingMillis = totalMillis
 
             timerJob = viewModelScope.launch {
-                while (remainingMillis > 0) {
+                while (remainingMillis > 0 && isRunning) {
                     delay(1000)
                     remainingMillis -= 1000
                 }
+
+                if(isRunning){
+                    alarmStatus = true
+                }else{
+                    remainingMillis = totalMillis
+                }
+
 
                 isRunning = false
             }
@@ -65,7 +76,14 @@ class TimerViewModel : ViewModel() {
             timerJob?.cancel()
             isRunning = false
             remainingMillis = 0
+            alarmStatus = false
         }
+    }
+
+    fun resetTimer(){
+        remainingMillis = totalMillis
+        alarmStatus = false
+        isRunning = false
     }
 
     override fun onCleared() {
